@@ -12,7 +12,6 @@ bookmarkRouter
     })
     .post(bodyParser, (req, res) => {
         const {title, url, desc, rating} = req.body;
-            console.log(req.body);
             const id = uuid();
             const bookmark = {
                 title,
@@ -56,8 +55,6 @@ bookmarkRouter
     })
     .delete((req, res) => {
         const { id } = req.params;
-
-        console.log(`Delete id is ${id}`);
       
         const bookIndex = bookMarks.findIndex(book => book.id == id)
       
