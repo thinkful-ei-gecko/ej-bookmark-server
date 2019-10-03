@@ -3,10 +3,8 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
-const uuid = require('uuid/v4');
 const { NODE_ENV } = require('./config');
-const bookmarkRouter = require('./Bookmark.js');
-const bookmarkItems = require('./bookmarks-Service.js');
+const bookmarkRouter = require('./bookmarks/bookmarkRouter')
 
 const app = express();
 
@@ -16,38 +14,18 @@ const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
   : 'common';
 
-app.use(morgan(morganOption))
-app.use(helmet())
+app.use(morgan(morganOption));
+app.use(helmet());
 
-//IMPLEMENTING DATABASE
-
-app.get('/bookmarks', (req, res, next) => {
-  const knexInstance = req.app.get('db')
-
-  bookmarkItems.getAllBookmarks(knexInstance)
-     .then(books => {
-       res.json(books)
-     })
-     .catch(next)
-})
-
-app.get('/bookmarks/:id', (req, res, next) => {
-  const knexInstance = req.app.get('db');
-
-  bookmarkItems.getByBookmarkId(knexInstance, req.params.id)
-    .then(book => {
-      if (!book){
-        return res.status(404).json({
-          error: {message: `Bookmark doesnt exist`}
-        })
-      }
-      res.json(book)
-    })
-    .catch(next)
-})
+app.use('/bookmarks', bookmarkRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello, boilerplate!')
+});
+
+app.get('/xss', (req, res) => {
+  res.cookie('secretToken', '1234567890');
+  res.sendFile(__dirname + '/xss-example.html')
 })
 
 // app.use(function validateBearerToken(req, res, next) {
@@ -61,8 +39,6 @@ app.get('/', (req, res) => {
 //   // move to the next middleware
 //   next()
 // })
-
-// app.use(bookmarkRouter);
 
 //error handling (default)
 
