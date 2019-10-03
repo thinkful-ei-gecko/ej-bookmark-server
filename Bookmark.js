@@ -6,7 +6,7 @@ const logger = require('./logger');
 const {bookMarks} = require('./store')
 
 bookmarkRouter
-    .route('/bookmarks')
+    .route('/bookmarksM')
     .get((req, res) => {
         res.json(bookMarks)
     })
