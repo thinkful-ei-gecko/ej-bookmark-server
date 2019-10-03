@@ -21,6 +21,27 @@ describe.only('Bookmark endpoints', function(){
 
     afterEach('cleanup', () => db('bookmark_reviews').truncate())
 
+    describe('GET /bookmarks', () => {
+        context('Given no articles', () => {
+            it('responds with 200 and an empty list', () => {
+                return supertest(app)
+                    .get('/bookmarks')
+                    .expect(200, [])
+            })
+        })
+    })
+
+    describe('GET /bookmarks/:id', () => {
+        context('Given no bookmarks', () => {
+            it('responds with 404', () => {
+                const bookmarkId = 123456
+                return supertest(app)
+                    .get(`/bookmarks/${bookmarkId}`)
+                    .expect(404, {error: {message: `Bookmark doesnt exist`}})
+            })
+        })
+    })
+
     context('Given there are bookmarks in the database', () => {
         const bookmarks = makeBookmarkArray();
 

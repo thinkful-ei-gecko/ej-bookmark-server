@@ -36,6 +36,11 @@ app.get('/bookmarks/:id', (req, res, next) => {
 
   bookmarkItems.getByBookmarkId(knexInstance, req.params.id)
     .then(book => {
+      if (!book){
+        return res.status(404).json({
+          error: {message: `Bookmark doesnt exist`}
+        })
+      }
       res.json(book)
     })
     .catch(next)
