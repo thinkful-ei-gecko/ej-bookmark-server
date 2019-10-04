@@ -55,7 +55,7 @@ describe('Bookmark endpoints', function(){
                 const expectedBookmark = bookmarks[bookmarkId - 1]
                 return supertest(app)
                   .get(`/bookmarks/${bookmarkId}`)
-                  .expect(500, expectedBookmark)
+                  .expect(200, expectedBookmark)
               })
         })
     })

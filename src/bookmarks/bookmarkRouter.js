@@ -53,22 +53,21 @@ bookmarkRouter
   
   bookmarkRouter
     .route('/:id')
-    .all((req, res, next) => {
-  
-    bookmarkItems.getByBookmarkId(req.app.get('db'), req.params.id)
-      .then(book => {
-        if (!book){
-          return res.status(404).json({
-            error: {message: `Bookmark doesnt exist`}
-          })
-        }
-        res.book = book;
-        next()
-      })
-        .catch(next)
-      })
     .get((req, res, next) => {
-      res.json(serializeBookmark(res.bookmark))
+      const knexInstance = req.app.get('db')
+     bookmarkItems.getByBookmarkId(
+       knexInstance,
+       req.params.id
+     )
+       .then(book => {
+         if (!book) {
+           return res.status(404).json({
+             error: { message: `Bookmark doesnt exist` }
+           })
+         }
+         res.json(serializeBookmark(book))
+       })
+       .catch(next)
     })
     .delete((req, res, next) => {
         bookmarkItems.deleteBookmark(
